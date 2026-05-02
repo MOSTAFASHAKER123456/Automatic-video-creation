@@ -1,110 +1,75 @@
 import random
-
-import os 
-
-# os .chdir(os.path.dirname(os.path.abspath(__file__)))
-
-
+import os
 import sys
 
-def resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
 
-# ✅ تغيير مجلد التشغيل للمجلد الحالي (يدعم EXE)
-os.chdir(resource_path("."))
-  
-  
-# def frist_video():
-#     with open('esraa.txt','r',encoding='utf-8')as f:
-#         links= [line.strip() for line in f if line.strip()]
-
-#     return random.choice(links)
-
-# def second_video():
-#     with open('slime.txt','r',encoding='utf-8')as f:
-#         links= [line.strip() for line in f if line.strip()]
-
-#     return random.choice(links)
+def data_path(filename):
+    """للملفات اللي بتتعدل زي txt — دايما جنب الـ EXE مش جوه"""
+    if getattr(sys, 'frozen', False):
+        return os.path.join(os.path.dirname(sys.executable), filename)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), filename)
 
 
-def path(path):
-   return os.path.join(os.path.dirname(sys.executable), path)
+# ✅ مجلد التشغيل دايما جنب الـ EXE أو الـ script
+os.chdir(data_path("."))
 
 
 def frist_video():
-    filepath = path("esraa.txt")
-    
+    filepath = data_path("esraa.txt")  # ✅ data_path مش resource_path
     with open(filepath, 'r', encoding='utf-8') as f:
         links = [line.strip() for line in f if line.strip()]
-    
     if not links:
-        return None  # أو raise Exception حسب ما تحب
+        return None
+    return links[-1]
 
-    last_link = links[-1]  # آخر رابط
 
-    return last_link
 def delet_frist_video():
-        # نحذف الرابط الأخير ونحدث الملف
-    filepath = path("esraa.txt")
-
+    filepath = data_path("esraa.txt")  # ✅
     with open(filepath, 'r', encoding='utf-8') as f:
         links = [line.strip() for line in f if line.strip()]
-        if not links:
-           return False
-    
-    with open(filepath,'w',encoding='utf-8')as f:
-
+    if not links:
+        return False
+    with open(filepath, 'w', encoding='utf-8') as f:
         for line in links[:-1]:
             f.write(line + '\n')
-
     return True
-       
+
+
 def second_video():
-    filepath=path('slime.txt')
-    with open(filepath,'r',encoding='utf-8')as f:
-        links= [line.strip() for line in f if line.strip()]
-
-    return links[0]
-
-def delet_second_video():
-        # نحذف الرابط الأخير ونحدث الملف
-    filepath = path('slime.txt')
-
+    filepath = data_path('slime.txt')  # ✅
     with open(filepath, 'r', encoding='utf-8') as f:
         links = [line.strip() for line in f if line.strip()]
-        if not links:
-           return False
-    
-    with open(filepath,'w',encoding='utf-8')as f:
+    return links[0]
 
+
+def delet_second_video():
+    filepath = data_path('slime.txt')  # ✅
+    with open(filepath, 'r', encoding='utf-8') as f:
+        links = [line.strip() for line in f if line.strip()]
+    if not links:
+        return False
+    with open(filepath, 'w', encoding='utf-8') as f:
         for line in links[1:]:
             f.write(line + '\n')
 
 
-
-
 def index_number():
-    filepath = path('numbers.txt')
-    with open(filepath,'r')as f:
+    filepath = data_path('numbers.txt')  # ✅
+    with open(filepath, 'r') as f:
         numbers = [num.strip() for num in f if num.strip()]
+    if not numbers:
+        return None
+    return numbers[0]
 
-        if not numbers :
-            return None
-        else:
-            return numbers[0]
+
 def delet_number():
-    filepath = path('numbers.txt')
-    with open(filepath,'r')as f:
-        numbers = [num.strip() for num in f if num.strip()] 
-        
-      
-    with open (filepath,'w')as f :
+    filepath = data_path('numbers.txt')  # ✅
+    with open(filepath, 'r') as f:
+        numbers = [num.strip() for num in f if num.strip()]
+    with open(filepath, 'w') as f:
         for num in numbers[1:]:
-            f.write(num+'\n')
+            f.write(num + '\n')
     return True
-
 
 
 def delete_files(file1, file2):
